@@ -36,11 +36,11 @@ const calendar = flatpickr("#datetime-picker", {
     selectedDate = calendar.selectedDates[0];
 
     if (selectedDate <= currentDate) {
-     return  Notiflix.Notify.failure("Please choose a date in the future");
+    return  Notiflix.Notify.failure("Please choose a date in the future");
     } else {
       startBtn.disabled = false;
       startBtn.addEventListener("click", () => {
-        // Recalculate remaining time inside the click event
+
         timerId = setInterval(counter, 1000);
       });
     }
