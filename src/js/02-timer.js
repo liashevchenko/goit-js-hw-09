@@ -25,38 +25,47 @@ function convertMs(ms) {
 }
 
 startBtn.disabled = true;
+startBtn.addEventListener("click", () => {
+timerId = setInterval(counter, 1000);});
 
 const calendar = flatpickr("#datetime-picker", {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-  onClose(selectedDates) {
-    const currentDate = new Date();
-    selectedDate = calendar.selectedDates[0];
-
+  onOpen() {
+  startBtn.disabled = true;
+  },
+  onClose([selectedDates]) {
+    const currentDate = Date.now();
+    selectedDate = calendar.selectedDates;
     if (selectedDate <= currentDate) {
-    return  Notiflix.Notify.failure("Please choose a date in the future");
+      return Notiflix.Notify.failure("Please choose a date in the future");
     } else {
       startBtn.disabled = false;
-      startBtn.addEventListener("click", () => {
-
-        timerId = setInterval(counter, 1000);
-      });
     }
   },
 });
 
 function counter() {
-  const remainingTime = selectedDate - new Date();
-  startBtn.disabled = true;
-  const timeObj = convertMs(remainingTime);
-  daysSpan.textContent = timeObj.days.toString().padStart(2, '0');
-  hoursSpan.textContent = timeObj.hours.toString().padStart(2, '0');
-  minutesSpan.textContent = timeObj.minutes.toString().padStart(2, '0');
-  secondsSpan.textContent = timeObj.seconds.toString().padStart(2, '0');
-  
+  const remainingTime = selectedDate - Date.now();
   if (remainingTime <= 0) {
     clearInterval(timerId);
+    markUp(0);
+  } else {
+    startBtn.disabled = true;
+    markUp(remainingTime);
   }
+}
+
+function markUp(remainingTime) {
+  const timeObj = convertMs(remainingTime);
+  daysSpan.textContent = convertString(timeObj.days)
+  hoursSpan.textContent = convertString(timeObj.hours)
+  minutesSpan.textContent = convertString(timeObj.minutes)
+  secondsSpan.textContent = convertString(timeObj.seconds)
+}
+
+function convertString(item) {
+  return item.toString().padStart(2, '0');
 }
