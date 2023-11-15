@@ -61,7 +61,6 @@ const counter = () => {
   } else {
     startBtn.disabled = true;
     markUp(remainingTime);
-    console.log(remainingTime);
   }
 };
 
